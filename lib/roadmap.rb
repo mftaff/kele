@@ -13,4 +13,16 @@ module Roadmap
         response = self.class.get("#{@base_url}/checkpoints/#{checkpoint_id}", headers: { "authorization": @auth_token })
         JSON.parse(response.body)
     end
+    
+    def create_submission(checkpoint_id, comment, assignment_branch=nil, assignment_commit_link=nil)
+        enrollment_id = self.get_me.dig("current_enrollment", "id")
+    
+        self.class.post("#{@base_url}/checkpoint_submissions", body: {
+            checkpoint_id: checkpoint_id,
+            enrollment_id: enrollment_id,
+            comment: comment,
+            assignment_branch: assignment_branch,
+            assignment_commit_link: assignment_commit_link
+            }, headers: { "authorization": @auth_token })
+    end
 end
